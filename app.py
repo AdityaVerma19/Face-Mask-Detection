@@ -1,17 +1,30 @@
 import streamlit as st
 import cv2
 import numpy as np
-from tensorflow.keras.models import load_model
+import tensorflow as tf
+import zipfile
+import os
 
 st.set_page_config(page_title="Face Mask Detection", layout="centered")
 
 st.title("🎭 Face Mask Detection")
 st.write("Upload an image to detect whether a person is wearing a mask.")
 
-# Load model
-model = load_model("mask_detector_model.h5")
+# ----------------------------
+# Unzip model if needed
+# ----------------------------
+if not os.path.exists("saved_model_format"):
+    with zipfile.ZipFile("saved_model_format.zip", 'r') as zip_ref:
+        zip_ref.extractall()
 
-# Load face detector
+# ----------------------------
+# Load Model (ONLY ONCE)
+# ----------------------------
+model = tf.keras.models.load_model("saved_model_format")
+
+# ----------------------------
+# Load Face Detector
+# ----------------------------
 faceNet = cv2.dnn.readNetFromCaffe(
     "deploy.prototxt",
     "res10_300x300_ssd_iter_140000.caffemodel"
