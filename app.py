@@ -3,7 +3,10 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 
-st.title("🎭 Face Mask Detection (Webcam)")
+st.set_page_config(page_title="Face Mask Detection", layout="centered")
+
+st.title("🎭 Face Mask Detection")
+st.write("Upload an image to detect whether a person is wearing a mask.")
 
 # Load model
 model = load_model("mask_detector_model.keras")
@@ -14,10 +17,10 @@ faceNet = cv2.dnn.readNetFromCaffe(
     "res10_300x300_ssd_iter_140000.caffemodel"
 )
 
-image = st.camera_input("Take a picture")
+uploaded_file = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
 
-if image is not None:
-    file_bytes = np.asarray(bytearray(image.read()), dtype=np.uint8)
+if uploaded_file is not None:
+    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     img = cv2.imdecode(file_bytes, 1)
 
     (h, w) = img.shape[:2]
