@@ -8,7 +8,7 @@ import os
 st.set_page_config(page_title="Face Mask Detection", layout="centered")
 
 st.title("🎭 Face Mask Detection")
-st.write("Upload an image to detect whether a person is wearing a mask.")
+st.write("Detect whether a person is wearing a mask.")
 
 # ----------------------------
 # Unzip model if needed
@@ -18,7 +18,7 @@ if not os.path.exists("saved_model_format"):
         zip_ref.extractall()
 
 # ----------------------------
-# Load Model (ONLY ONCE)
+# Load Model
 # ----------------------------
 model = tf.keras.models.load_model("saved_model_format")
 
@@ -30,10 +30,22 @@ faceNet = cv2.dnn.readNetFromCaffe(
     "res10_300x300_ssd_iter_140000.caffemodel"
 )
 
-uploaded_file = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
+# ----------------------------
+# Input Method
+# ----------------------------
+option = st.radio("Choose input method", ["Upload", "Camera"])
 
-if uploaded_file is not None:
-    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+if option == "Upload":
+    img_file = st.file_uploader("Upload Image", type=["jpg", "png", "jpeg"])
+else:
+    img_file = st.camera_input("Take a picture")
+
+# ----------------------------
+# Process Image
+# ----------------------------
+if img_file is not None:
+
+    file_bytes = np.asarray(bytearray(img_file.read()), dtype=np.uint8)
     img = cv2.imdecode(file_bytes, 1)
 
     (h, w) = img.shape[:2]
