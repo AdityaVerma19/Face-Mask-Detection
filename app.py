@@ -9,7 +9,7 @@ st.title("🎭 Face Mask Detection")
 st.write("Upload an image to detect whether a person is wearing a mask.")
 
 # Load model
-model = load_model("mask_detector_model.keras")
+model = load_model("mask_detector_model.h5")
 
 # Load face detector
 faceNet = cv2.dnn.readNetFromCaffe(
